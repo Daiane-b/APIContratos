@@ -3,9 +3,8 @@ from datetime import date
 
 STATUS = (
     (1, 'criado'),
-    (2,'aguardando_docs'),
-    (3,'aprovado'),
-    (4,'analisado')
+    (2,'aprovado'),
+    (3,'analisado')
 )
 STATUS_APROVACAO = (
     (1,'analisando'),

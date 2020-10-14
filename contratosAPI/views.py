@@ -50,7 +50,7 @@ class ContratoView(APIView):
                                     status=status.HTTP_400_BAD_REQUEST)
             contrato = Contrato.objects.get(pk=pk)
             serializer = ContratoSerializer(contrato, data=request.data)
-            if serializer.is_valid():
+            if serializer.is_valid() and (serializer.data.statusAprovacao != 2 or serializer.data.statusAprovacao != 3):
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors,
@@ -68,8 +68,12 @@ class ContratoView(APIView):
                 return JsonResponse({'mensagem': "O id deve ser maior que zero."},
                                     status=status.HTTP_400_BAD_REQUEST)
             contrato = Contrato.objects.get(pk=pk)
-            contrato.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            contratoSerializer = ContratoSerializer(contrato)
+            if contratoSerializer.data.statusAprovacao != 2 or contratoSerializer.data.statusAprovacao != 3:
+                contrato.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                JsonResponse({'mensagem': 'O contrato não pode ser excluído, pois já está finalizado'})
         except Contrato.DoesNotExist:
             return JsonResponse({'mensagem': "O contrato não existe"},
                                 status=status.HTTP_404_NOT_FOUND)
@@ -84,10 +88,29 @@ class AddDoc(APIView):
             if documentoSerializer.is_valid():
                 doc = documentoSerializer.save()
                 if (doc.id):
-                    Contrato.objects.filter(pk=doc.contratoId).update(statusAprovacao=2)
+                    Contrato.objects.filter(pk=doc.contratoId).update(statusAprovacao=1)
             else:
                 return Response(documentoSerializer.errors, status=status.HTTP_400_BAD_RESQUEST)
             return JsonResponse(documentoSerializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return JsonResponse({'mensagem': "Ocorreu um erro no servidor"+ex},
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class analisaContrato(APIView):
+    def put(self, resquest, pk):
+        try:
+            if pk == '0':
+                return JsonResponse({'mensagem': "O id deve ser maior que zero"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            contrato = Contrato.objects.get(pk=pk)
+            contratoSerializer = ContratoSerializer(contrato)
+            user = User.objects.get(pk=contratoSerializer.data['usuarioId'])
+            userSerializer = UserSerializer(user)
+            Contrato.objects.filter(pk=pk).update(statusAprovacao=resquest.data['aprovacao'])
+            return JsonResponse({'contrato':contratoSerializer.data, 'usuario': userSerializer.data}, status=status.HTTP_200_OK)
+        except Contrato.DoesNotExist:
+            return JsonResponse({'mensagem': "O contrato não existe"},
+                                status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return JsonResponse({'mensagem': "Ocorreu um erro:"},
+                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
