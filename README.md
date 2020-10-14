@@ -219,7 +219,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 </tr>
 <tr>
 <td>Resultado</td>
-<td>(Obrigatório) Status aprovação do contrato   (1:'aprovado') (2:'rejeitado') VARCHAR</td>
+<td>(Obrigatório) Status aprovação do contrato   (1:'aprovado') (2:'rejeitado') INT</td>
 </tr>
 </table>
 <p><b>Content-Type</b> application/json</p>
