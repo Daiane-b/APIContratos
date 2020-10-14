@@ -135,6 +135,105 @@ As seguintes ferramentas foram usadas na construção do projeto:
         "valor": 300.0,
         "status": 1,
         "usuarioId": 9,
+        "statusAprovacao": ""
+    },
+    "usuario": {
+        "id": 9,
+        "nome": "Daiane",
+        "email": "teste@teste.com.br",
+        "cpf": "21333333333",
+        "renda": 1000.0,
+        "rua": "",
+        "numero": 0,
+        "bairro": "",
+        "cidade": "",
+        "estado": "",
+        "estadoCivil": "",
+        "dataNascimento": "2020-10-13"
+    }
+}
+<p></p>
+<p><b>POST</b> Adicionar Documento</p>
+<p>api/addDoc<p>
+
+<table>
+<tr>
+    <th>Parâmetro</th>
+    <th>Descrição</th>
+</tr>
+<tr>
+<td>tipo</td>
+<td>(Obrigatório) nome do contratante VARCHAR</td>
+</tr>
+<tr>
+<td>email</td>
+<td>(Obrigatório) Tipo do Documento a ser inserido INT (1: CPF, 2:CNH)</td>
+</tr>
+<tr>
+<td>CPF</td>
+<td>(Obrigatório) CPF do contratante VARCHAR</td>
+</tr>
+<tr>
+<td>Imagens</td>
+<td>(Opcional)URL das fotos dos documentos VARCHAR</td>
+</tr>
+<tr>
+<td>Comprovante de Renda</td>
+<td>(Opcional) URL das fotos do comprovante de renda VARCHAR</td>
+</tr>
+<tr>
+<td>ContratoID</td>
+<td>(Obrigatório) id do contrato referente a adição do documento INT</td>
+</tr>
+</table>
+<p><b>Content-Type</b> application/json</p>
+<h4>Exemplo Request</h4>
+{
+    "tipo": 1,
+    "urlimagens": "https://www.google.com.br/",
+    "urlcomprovanteRenda":"https://www.google.com.br/",
+    "contratoId":1
+}
+<h4>Exemplo Response</h4>
+{
+        "id": 1,
+        "tipo": [
+            1,
+            "CPF"
+        ],
+        "urlimagens": "https://www.google.com.br/",
+    "urlcomprovanteRenda":"https://www.google.com.br/",
+    "contratoId":1
+    }
+}
+<p></p>
+</br>
+<p></p>
+<p><b>POST</b> Analisar Documento</p>
+<p>api/analisaContrato/idContrato<p>
+
+<table>
+<tr>
+    <th>Parâmetro</th>
+    <th>Descrição</th>
+</tr>
+<tr>
+<td>Resultado</td>
+<td>(Obrigatório) Status aprovação do contrato   (1:'aprovado') (2:'rejeitado') VARCHAR</td>
+</tr>
+</table>
+<p><b>Content-Type</b> application/json</p>
+<h4>Exemplo Request</h4>
+{
+    "aprovacao": 1
+}
+<h4>Exemplo Response</h4>
+{
+    "contrato": {
+        "id": 1,
+        "valor": 300.0,
+        "status": 1,
+        "usuarioId": 9,
         "statusAprovacao": 1
     },
     "usuario": {
@@ -153,3 +252,4 @@ As seguintes ferramentas foram usadas na construção do projeto:
     }
 }
 <p></p>
+</br>
